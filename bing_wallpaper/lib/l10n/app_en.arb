@@ -1,0 +1,90 @@
+{
+  "app_name": "Bing Wallpaper for Linux",
+  "@app_name": {
+    "description": "Bing Wallpaper for Linux"
+  },
+  "home": "Home",
+  "@home": {
+    "description": "Home"
+  },
+  "library": "Library",
+  "@library": {
+    "description": "Library"
+  },
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings"
+  },
+  "feedback": "Feedback",
+  "@feedback": {
+    "description": "Feedback"
+  },
+  "photo_of_the_day": "Photo of the day",
+  "@photo_of_the_day": {
+    "description": "Photo of the day"
+  },
+  "wallpaper_search_tips": "Search from Web to learn more",
+  "@wallpaper_search_tips": {
+    "description": "Search from Web to learn more"
+  },
+  "wallpaper": "Wallpaper",
+  "@wallpaper": {
+    "description": "Wallpaper"
+  },
+  "convention": "Convention",
+  "@convention": {
+    "description": "Convention"
+  },
+  "widget": "Widget",
+  "@widget": {
+    "description": "Widget"
+  },
+  "about": "About",
+  "@about": {
+    "description": "About"
+  },
+  "open": "Open",
+  "@open": {
+    "description": "Open"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close"
+  },
+  "settings_refresh_wallpaper_daily": "Refresh wallpaper daily",
+  "@settings_refresh_wallpaper_daily": {
+    "description": "Refresh wallpaper daily"
+  },
+  "settings_refresh_wallpaper_daily_description": "Start to change daily images",
+  "@settings_refresh_wallpaper_daily_description": {
+    "description": "Start to change daily images"
+  },
+  "settings_display_ai_wallpaper": "Display AI wallpaper",
+  "@settings_display_ai_wallpaper": {
+    "description": "Display AI wallpaper"
+  },
+  "settings_display_ai_wallpaper_description": "Enable to display AI generated background images",
+  "@settings_display_ai_wallpaper_description": {
+    "description": "Enable to display AI generated background images"
+  },
+  "settings_right_corner": "Right Corner",
+  "@settings_right_corner": {
+    "description": "Right Corner"
+  },
+  "settings_right_corner_description": "Click to learn more information about the background image",
+  "@settings_right_corner_description": {
+    "description": "Enable to learn more information about the background image"
+  },
+  "settings_enable_desktop_to_open_bing": "Click on the desktop to open Bing",
+  "@settings_enable_desktop_to_open_bing": {
+    "description": "Enable desktop to open Bing"
+  },
+  "settings_about": "Bing Wallpaper for Linux",
+  "@settings_about": {
+    "description": "Enable desktop to open Bing"
+  },
+  "settings_about_description": "App development by Caiju Xu",
+  "@settings_about_description": {
+    "description": "App development by Caiju Xu"
+  }
+}

@@ -1,0 +1,28 @@
+name: bing-wallpaper
+version: 1.0.0
+summary: Bing Wallpaper for Linux
+description: Bing Wallpaper for Linux!
+
+confinement: strict
+base: core22
+grade: stable
+
+slots:
+  dbus-bing-wallpaper: # adjust accordingly to your app name
+    interface: dbus
+    bus: session
+    name: xcj.app.flutter.bing_wallpaper # adjust accordingly to your app name and
+
+apps:
+  bing-wallpaper:
+    command: bing_wallpaper
+    extensions: [gnome] # gnome includes the libraries required by flutter
+    plugs:
+      - network
+    slots:
+      - dbus-bing-wallpaper
+parts:
+  bing-wallpaper:
+    source: .
+    plugin: flutter
+    flutter-target: lib/main.dart # The main entry-point file of the application

@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=Bing Wallpaper
+Comment=Bing Wallpaper for Linux
+Exec=bing_wallpaper
+Icon=${SNAP}/meta/gui/ic_launcher_round.webp # Replace name with your app name.
+Terminal=false
+Type=Application
+Categories=Tool; # Adjust accordingly your snap category.
