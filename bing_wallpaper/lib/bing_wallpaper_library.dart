@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bing_wallpaper/wallpaper/WallpaperItem.dart';
 import 'package:bing_wallpaper/wallpaper/WallpaperLibrary.dart';
 import 'package:bing_wallpaper/utils/LogUtil.dart';
@@ -19,7 +21,7 @@ class BingWallpaperLibraryPage extends StatefulWidget {
 }
 
 class _BingWallpaperLibraryPageState extends State<BingWallpaperLibraryPage>
-    implements WallpaperSourceLoadListener {
+    implements WallpaperSourceListener {
   static String _TAG = "_BingWallpaperLibraryPageState";
   final WallpaperLibrary _wallpaperLibrary = WallpaperLibrary();
 
@@ -27,12 +29,12 @@ class _BingWallpaperLibraryPageState extends State<BingWallpaperLibraryPage>
     var bingWallpaperUpdateSource = BingWallpaperUpdateSource(
       "https://raw.onmicrosoft.cn/Bing-Wallpaper-Action/main/data/zh-CN_update.json",
       sourceName: "Bing Update(CN)",
-      loadListener: this,
+      listener: this,
     );
     var bingWallpaperFullSource = BingWallpaperFullSource(
       "https://raw.onmicrosoft.cn/Bing-Wallpaper-Action/main/data/zh-CN_all.json",
       sourceName: "Bing Full(CN)",
-      loadListener: this,
+      listener: this,
     );
     _wallpaperLibrary.addSource(bingWallpaperUpdateSource);
     _wallpaperLibrary.addSource(bingWallpaperFullSource);
@@ -53,12 +55,16 @@ class _BingWallpaperLibraryPageState extends State<BingWallpaperLibraryPage>
   @override
   void onLoadError(WallpaperSource wallpaperSource, Error e) {}
 
+  @override
+  void onCurrentItemChanged(WallpaperItem oldItem, WallpaperItem newItem) {}
+
   Future<void> onSourceSelectChanged(WallpaperSource wallpaperSource) async {
     Log.d(
       _TAG,
       "onSourceSelectChanged, wallpaperSource:${wallpaperSource.sourceName}",
     );
     _wallpaperLibrary.setCurrentSource(wallpaperSource, true);
+    await onCurrentWallpaperChangedByUserTriggered(wallpaperSource.currentItem);
   }
 
   Future<void> setSpecifyAsWallpaper(
@@ -98,10 +104,9 @@ class _BingWallpaperLibraryPageState extends State<BingWallpaperLibraryPage>
   Future<void> onCurrentWallpaperChangedByUserTriggered(
     WallpaperItem? wallpaperItem,
   ) async {
-    if (wallpaperItem == null) {
-      return;
+    if (wallpaperItem != null) {
+      await PlatformHelper.changeWallpaper(wallpaperItem);
     }
-    await PlatformHelper.changeWallpaper(wallpaperItem);
     setState(() {});
   }
 
@@ -250,62 +255,50 @@ class _BingWallpaperLibraryPageState extends State<BingWallpaperLibraryPage>
         SizedBox(
           width: 360,
           height: 350,
-          child: GridView.count(
-            // Create a grid with 2 columns.
-            // If you change the scrollDirection to horizontal,
-            // this produces 2 rows.
-            shrinkWrap: true,
-            crossAxisCount: 3,
-            // Generate 100 widgets that display their index in the list.
-            children: List.generate(
-              wallpaperSource?.sourceData?.getDataLength() ?? 0,
-              (index) {
-                return GestureDetector(
-                  onTap: () {
-                    if (wallpaperSource == null) {
-                      return;
-                    }
-                    var item = wallpaperSource.sourceData?.getItemByIndex(
-                      index,
-                    );
-                    if (item != null) {
-                      onItemClick(item);
-                    }
-                  },
-                  child: Container(
-                    width: 150,
-                    height: 73,
-                    padding: EdgeInsets.all(2),
-                    child: CachedNetworkImage(
-                      imageUrl:
-                          wallpaperSource?.sourceData
-                              ?.getItemByIndex(index)
-                              ?.getFullUrl() ??
-                          "",
-                      width: 116,
-                      height: 65,
-                      fit: BoxFit.scaleDown,
-                      progressIndicatorBuilder: (context, url, progress) {
-                        return Stack(
-                          children: [
-                            Container(
-                              alignment: Alignment.center,
-                              child: SizedBox(
-                                width: 42,
-                                height: 42,
-                                child: ProgressRing(value: progress.progress),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
-                      errorWidget: (context, url, error) =>
-                          Icon(FluentIcons.error),
-                    ),
-                  ),
-                );
-              },
+          child: GridView.builder(
+            itemCount: wallpaperSource?.sourceData?.getDataLength() ?? 0,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3, // 每行3个子项
+              mainAxisSpacing: 4, // 垂直方向间距
+              crossAxisSpacing: 4, // 水平方向间距
+              childAspectRatio: 1.77, // 宽度 / 高度 = 比例
             ),
+            itemBuilder: (BuildContext context, int index) {
+              return GestureDetector(
+                onTap: () {
+                  if (wallpaperSource == null) {
+                    return;
+                  }
+                  var item = wallpaperSource.sourceData?.getItemByIndex(index);
+                  if (item != null) {
+                    onItemClick(item);
+                  }
+                },
+                child: CachedNetworkImage(
+                  imageUrl:
+                  wallpaperSource?.sourceData
+                      ?.getItemByIndex(index)
+                      ?.getFullUrl() ??
+                      "",
+                  fit: BoxFit.scaleDown,
+                  progressIndicatorBuilder: (context, url, progress) {
+                    return Stack(
+                      children: [
+                        Container(
+                          alignment: Alignment.center,
+                          child: SizedBox(
+                            width: 42,
+                            height: 42,
+                            child: ProgressRing(value: progress.progress),
+                          ),
+                        ),
+                      ],
+                    );
+                  },
+                  errorWidget: (context, url, error) => Icon(FluentIcons.error),
+                ),
+              );
+            },
           ),
         ),
       ],

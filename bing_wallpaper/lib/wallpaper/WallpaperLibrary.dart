@@ -1,6 +1,6 @@
 import 'WallpaperSource.dart';
 
-abstract class LibrarySourceChangedListener {
+abstract class LibrarySourceListener {
   void onSourceChanged();
 
   void onCurrentSourceChanged(WallpaperSource wallpaperSource);
@@ -11,7 +11,7 @@ class WallpaperLibrary {
 
   WallpaperSource? currentSource;
 
-  LibrarySourceChangedListener? listener;
+  LibrarySourceListener? listener;
 
   WallpaperLibrary({this.listener});
 

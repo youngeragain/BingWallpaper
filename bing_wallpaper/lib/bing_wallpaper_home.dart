@@ -19,7 +19,7 @@ class BingWallpaperHomePage extends StatefulWidget {
 }
 
 class _BingWallpaperHomePageState extends State<BingWallpaperHomePage>
-    implements WallpaperSourceLoadListener {
+    implements WallpaperSourceListener {
   static const String _TAG = "_BingWallpaperHomePageState";
 
   late WallpaperSource _wallpaperSource;
@@ -28,7 +28,7 @@ class _BingWallpaperHomePageState extends State<BingWallpaperHomePage>
     var bingWallpaperFullSource = BingWallpaperUpdateSource(
       "https://raw.onmicrosoft.cn/Bing-Wallpaper-Action/main/data/zh-CN_update.json",
       sourceName: "Bing Update(CN)",
-      loadListener: this,
+      listener: this,
     );
     _wallpaperSource = bingWallpaperFullSource;
     _wallpaperSource.loadData();
@@ -67,6 +67,9 @@ class _BingWallpaperHomePageState extends State<BingWallpaperHomePage>
   @override
   void onLoadError(WallpaperSource wallpaperSource, Error e) {}
 
+  @override
+  void onCurrentItemChanged(WallpaperItem oldItem, WallpaperItem newItem) {}
+
   Future<void> setSpecifyAsWallpaper(
     WallpaperSource wallpaperSource,
     WallpaperItem wallpaperItem,
@@ -96,10 +99,9 @@ class _BingWallpaperHomePageState extends State<BingWallpaperHomePage>
   Future<void> onCurrentWallpaperChangedByUserTriggered(
     WallpaperItem? wallpaperItem,
   ) async {
-    if (wallpaperItem == null) {
-      return;
+    if (wallpaperItem != null) {
+      await PlatformHelper.changeWallpaper(wallpaperItem);
     }
-    await PlatformHelper.changeWallpaper(wallpaperItem);
     setState(() {});
   }
 
@@ -128,16 +130,14 @@ class _BingWallpaperHomePageState extends State<BingWallpaperHomePage>
         ..write(currentItemEndDate.substring(6));
     }
     var dateString = dateStringBuffer.toString();
-    return SizedBox(
-      width: 360,
-      child: Row(
-        children: [
-          Text("${RString.photo_of_the_day} | $dateString"),
-          Spacer(),
-          Text("${(currentItemIndex + 1)} / $dataLength"),
-        ],
-      ),
-    );
+    List<Widget> rowItems = [
+      Spacer(),
+      Text("${(currentItemIndex + 1)} / $dataLength"),
+    ];
+    if (dateString.isNotEmpty) {
+      rowItems.insert(0, Text("${RString.photo_of_the_day} | $dateString"));
+    }
+    return SizedBox(width: 360, child: Row(children: rowItems));
   }
 
   Widget buildCurrentSelectedWallpaperCardWidget(

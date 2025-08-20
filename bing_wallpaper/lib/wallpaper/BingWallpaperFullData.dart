@@ -1,9 +1,9 @@
-import 'package:bing_wallpaper/wallpaper/BingWallpaperFullSource.dart';
 
+import 'BingWallpaperSource.dart';
 import 'WallpaperItem.dart';
 import 'WallpaperSourceData.dart';
 
-class BingWallpaperFullData implements WallpaperSourceData<FullImageData> {
+class BingWallpaperFullData extends WallpaperSourceData<FullImageData> {
   BingWallpaperFullData({
     String? lastUpdate,
     num? total,
@@ -101,8 +101,8 @@ class BingWallpaperFullData implements WallpaperSourceData<FullImageData> {
   }
 
   @override
-  int getDataLength() {
-    return data?.length ?? 0;
+  List<FullImageData>? items() {
+    return data;
   }
 
   @override
@@ -304,7 +304,7 @@ class FullImageData implements WallpaperItem {
 
   @override
   String getFullUrl() {
-    return BingWallpaperFullSource.buildFullUrl(url);
+    return BingWallpaperSource.buildFullUrl(url);
   }
 
   Map<String, dynamic> toJson() {
