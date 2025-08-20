@@ -76,22 +76,19 @@ class _BingWallpaperHomePageState extends State<BingWallpaperHomePage>
     await onCurrentWallpaperChangedByUserTriggered(wallpaperSource.currentItem);
   }
 
-  Future<void> setCurrentAsWallpaper() async {
+  Future<void> setCurrentAsWallpaper(WallpaperSource wallpaperSource) async {
     Log.d(_TAG, "setCurrentAsWallpaper");
-    var wallpaperSource = _wallpaperSource;
     await onCurrentWallpaperChangedByUserTriggered(wallpaperSource.currentItem);
   }
 
-  Future<void> showPreviousWallpaper() async {
+  Future<void> showPreviousWallpaper(WallpaperSource wallpaperSource) async {
     Log.d(_TAG, "showPreviousWallpaper");
-    var wallpaperSource = _wallpaperSource;
     wallpaperSource.changeToPreviousItem();
     await onCurrentWallpaperChangedByUserTriggered(wallpaperSource.currentItem);
   }
 
-  Future<void> showNextWallpaper() async {
+  Future<void> showNextWallpaper(WallpaperSource wallpaperSource) async {
     Log.d(_TAG, "showNextWallpaper");
-    var wallpaperSource = _wallpaperSource;
     wallpaperSource.changeToNextItem();
     await onCurrentWallpaperChangedByUserTriggered(wallpaperSource.currentItem);
   }
@@ -237,7 +234,8 @@ class _BingWallpaperHomePageState extends State<BingWallpaperHomePage>
     );
   }
 
-  Widget buildWallpaperTipsCardWidget(WallpaperItem? wallpaperItem) {
+  Widget buildWallpaperTipsCardWidget(WallpaperSource wallpaperSource) {
+    var wallpaperItem = wallpaperSource.currentItem;
     var RString = AppLocalizations.of(context)!;
     return SizedBox(
       width: 360,
@@ -314,11 +312,17 @@ class _BingWallpaperHomePageState extends State<BingWallpaperHomePage>
               currentSelectedWallpaperUrl,
               currentSelectedWallpaperTitle,
               currentSelectedWallpaperSubTitle,
-              setCurrentAsWallpaper,
-              showPreviousWallpaper,
-              showNextWallpaper,
+              () {
+                setCurrentAsWallpaper(currentSource);
+              },
+              () {
+                showPreviousWallpaper(currentSource);
+              },
+              () {
+                showNextWallpaper(currentSource);
+              },
             ),
-            buildWallpaperTipsCardWidget(currentSource.currentItem),
+            buildWallpaperTipsCardWidget(currentSource),
           ],
         ),
       ),

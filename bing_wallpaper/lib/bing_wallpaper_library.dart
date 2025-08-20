@@ -62,33 +62,34 @@ class _BingWallpaperLibraryPageState extends State<BingWallpaperLibraryPage>
   }
 
   Future<void> setSpecifyAsWallpaper(
-    WallpaperSource wallpaperSource,
+    WallpaperSource? wallpaperSource,
     WallpaperItem wallpaperItem,
   ) async {
     Log.d(_TAG, "setSpecifyAsWallpaper");
-    wallpaperSource.setCurrentItem(wallpaperItem);
-    await onCurrentWallpaperChangedByUserTriggered(wallpaperSource.currentItem);
+    wallpaperSource?.setCurrentItem(wallpaperItem);
+    await onCurrentWallpaperChangedByUserTriggered(
+      wallpaperSource?.currentItem,
+    );
   }
 
-  Future<void> setCurrentAsWallpaper() async {
+  Future<void> setCurrentAsWallpaper(WallpaperSource? wallpaperSource) async {
     Log.d(_TAG, "setCurrentAsWallpaper");
-    var wallpaperSource = _wallpaperLibrary.currentSource;
     await onCurrentWallpaperChangedByUserTriggered(
       wallpaperSource?.currentItem,
     );
   }
 
-  Future<void> showPreviousWallpaper() async {
+  Future<void> showPreviousWallpaper(WallpaperSource? wallpaperSource) async {
     Log.d(_TAG, "showPreviousWallpaper");
-    var wallpaperSource = _wallpaperLibrary.currentSource;
+    wallpaperSource?.changeToPreviousItem();
     await onCurrentWallpaperChangedByUserTriggered(
       wallpaperSource?.currentItem,
     );
   }
 
-  Future<void> showNextWallpaper() async {
+  Future<void> showNextWallpaper(WallpaperSource? wallpaperSource) async {
     Log.d(_TAG, "showNextWallpaper");
-    var wallpaperSource = _wallpaperLibrary.currentSource;
+    wallpaperSource?.changeToNextItem();
     await onCurrentWallpaperChangedByUserTriggered(
       wallpaperSource?.currentItem,
     );
@@ -235,7 +236,7 @@ class _BingWallpaperLibraryPageState extends State<BingWallpaperLibraryPage>
 
   Widget buildWallpaperCardsWidget(
     WallpaperSource? wallpaperSource,
-    void Function(WallpaperSource, WallpaperItem) onItemClick,
+    void Function(WallpaperItem) onItemClick,
   ) {
     var RString = AppLocalizations.of(context)!;
     return Column(
@@ -268,7 +269,7 @@ class _BingWallpaperLibraryPageState extends State<BingWallpaperLibraryPage>
                       index,
                     );
                     if (item != null) {
-                      onItemClick(wallpaperSource, item);
+                      onItemClick(item);
                     }
                   },
                   child: Container(
@@ -354,12 +355,20 @@ class _BingWallpaperLibraryPageState extends State<BingWallpaperLibraryPage>
               currentSelectedWallpaperUrl,
               currentSelectedWallpaperTitle,
               currentSelectedWallpaperSubTitle,
-              setCurrentAsWallpaper,
-              showPreviousWallpaper,
-              showNextWallpaper,
+              () {
+                setCurrentAsWallpaper(currentSource);
+              },
+              () {
+                showPreviousWallpaper(currentSource);
+              },
+              () {
+                showNextWallpaper(currentSource);
+              },
             ),
             SizedBox(height: 20),
-            buildWallpaperCardsWidget(currentSource, setSpecifyAsWallpaper),
+            buildWallpaperCardsWidget(currentSource, (item) {
+              setSpecifyAsWallpaper(currentSource, item);
+            }),
           ],
         ),
       ),
