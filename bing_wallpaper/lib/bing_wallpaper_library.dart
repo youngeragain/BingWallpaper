@@ -1,16 +1,15 @@
-import 'dart:math';
-
-import 'package:bing_wallpaper/wallpaper/WallpaperItem.dart';
-import 'package:bing_wallpaper/wallpaper/WallpaperLibrary.dart';
 import 'package:bing_wallpaper/utils/LogUtil.dart';
 import 'package:bing_wallpaper/utils/PlatfromUtil.dart';
+import 'package:bing_wallpaper/wallpaper/WallpaperItem.dart';
+import 'package:bing_wallpaper/wallpaper/WallpaperLibrary.dart';
 import 'package:bing_wallpaper/wallpaper/WallpaperSource.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fluent_ui/fluent_ui.dart';
+
+import 'l10n/app_localizations.dart';
+import 'utils/Constants.dart';
 import 'wallpaper/BingWallpaperFullSource.dart';
 import 'wallpaper/BingWallpaperUpdateSource.dart';
-import 'utils/Constants.dart';
-import 'l10n/app_localizations.dart';
 
 class BingWallpaperLibraryPage extends StatefulWidget {
   const BingWallpaperLibraryPage({super.key});
@@ -246,59 +245,65 @@ class _BingWallpaperLibraryPageState extends State<BingWallpaperLibraryPage>
     var RString = AppLocalizations.of(context)!;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.start,
       spacing: 6,
       children: [
         Text(
           "${wallpaperSource?.sourceName ?? ""} ${RString.wallpaper}",
           style: TextStyle(fontWeight: FontWeight.w500),
         ),
+
         SizedBox(
           width: 360,
-          height: 350,
-          child: GridView.builder(
-            itemCount: wallpaperSource?.sourceData?.getDataLength() ?? 0,
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3, // 每行3个子项
-              mainAxisSpacing: 4, // 垂直方向间距
-              crossAxisSpacing: 4, // 水平方向间距
-              childAspectRatio: 1.77, // 宽度 / 高度 = 比例
-            ),
-            itemBuilder: (BuildContext context, int index) {
-              return GestureDetector(
-                onTap: () {
-                  if (wallpaperSource == null) {
-                    return;
-                  }
-                  var item = wallpaperSource.sourceData?.getItemByIndex(index);
-                  if (item != null) {
-                    onItemClick(item);
-                  }
-                },
-                child: CachedNetworkImage(
-                  imageUrl:
-                  wallpaperSource?.sourceData
-                      ?.getItemByIndex(index)
-                      ?.getFullUrl() ??
-                      "",
-                  fit: BoxFit.scaleDown,
-                  progressIndicatorBuilder: (context, url, progress) {
-                    return Stack(
-                      children: [
-                        Container(
-                          alignment: Alignment.center,
-                          child: SizedBox(
-                            width: 42,
-                            height: 42,
-                            child: ProgressRing(value: progress.progress),
-                          ),
-                        ),
-                      ],
-                    );
+          height: 360,
+          child: Align(
+            alignment: Alignment.topLeft,
+            child: GridView.builder(
+              shrinkWrap: true,
+              itemCount: wallpaperSource?.sourceData?.getDataLength() ?? 0,
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 4,
+                crossAxisSpacing: 4,
+                childAspectRatio: 1.77,
+              ),
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () {
+                    if (wallpaperSource == null) {
+                      return;
+                    }
+                    var item = wallpaperSource.sourceData?.getItemByIndex(index);
+                    if (item != null) {
+                      onItemClick(item);
+                    }
                   },
-                  errorWidget: (context, url, error) => Icon(FluentIcons.error),
-                ),
-              );
-            },
+                  child: CachedNetworkImage(
+                    imageUrl:
+                    wallpaperSource?.sourceData
+                        ?.getItemByIndex(index)
+                        ?.getFullUrl() ??
+                        "",
+                    fit: BoxFit.scaleDown,
+                    progressIndicatorBuilder: (context, url, progress) {
+                      return Stack(
+                        children: [
+                          Container(
+                            alignment: Alignment.center,
+                            child: SizedBox(
+                              width: 42,
+                              height: 42,
+                              child: ProgressRing(value: progress.progress),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                    errorWidget: (context, url, error) => Icon(FluentIcons.error),
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ],

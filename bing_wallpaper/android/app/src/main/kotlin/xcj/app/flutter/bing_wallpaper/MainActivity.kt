@@ -1,14 +1,19 @@
 package xcj.app.flutter.bing_wallpaper
 
 import android.app.WallpaperManager
+import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.util.Log
 import androidx.core.net.toUri
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
+import io.flutter.embedding.engine.FlutterEngineCache
 import io.flutter.plugin.common.MethodChannel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,9 +21,8 @@ import kotlinx.coroutines.launch
 class MainActivity : FlutterActivity() {
     companion object {
         private const val TAG = "MainActivity"
+        private const val CHANNEL = "xcj.app.flutter.wallpaper"
     }
-
-    private val CHANNEL = "xcj.app.flutter.wallpaper"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,8 +31,38 @@ class MainActivity : FlutterActivity() {
         Log.d(TAG, "onCreate")
     }
 
+    override fun provideFlutterEngine(context: Context): FlutterEngine? {
+        if (FlutterEngineCache.getInstance().contains("single_engine_id_0")) {
+            return FlutterEngineCache.getInstance().get("single_engine_id_0")
+        } else {
+            val flutterEngine = FlutterEngine(context.applicationContext)
+            FlutterEngineCache.getInstance().put("single_engine_id_0", flutterEngine)
+            return flutterEngine
+        }
+    }
+
+    override fun recreate() {
+        Log.d(TAG, "recreate")
+        super.recreate()
+    }
+
+    override fun shouldUpRecreateTask(targetIntent: Intent?): Boolean {
+        Log.d(TAG, "shouldUpRecreateTask")
+        return super.shouldUpRecreateTask(targetIntent)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle, outPersistentState: PersistableBundle) {
+        super.onSaveInstanceState(outState, outPersistentState)
+        Log.d(TAG, "onSaveInstanceState")
+    }
+
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        flutterEngine.plugins
+        Log.d(
+            TAG,
+            "flutterEngine, hash:${flutterEngine.hashCode()}, engineId:${flutterEngine.engineId}"
+        )
         MethodChannel(
             flutterEngine.dartExecutor.binaryMessenger,
             CHANNEL

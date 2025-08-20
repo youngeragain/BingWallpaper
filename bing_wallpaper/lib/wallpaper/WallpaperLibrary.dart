@@ -7,7 +7,7 @@ abstract class LibrarySourceListener {
 }
 
 class WallpaperLibrary {
-  List<WallpaperSource> _sources = [];
+  final List<WallpaperSource> _sources = [];
 
   WallpaperSource? currentSource;
 

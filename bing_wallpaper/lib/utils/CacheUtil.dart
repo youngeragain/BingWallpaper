@@ -19,14 +19,10 @@ class CacheHelper{
       String uri,
       ) async {
     try {
-      // 1. 获取图片缓存文件
-
       var cachedFile = await getImageCacheFile(uri);
       if (cachedFile == null) {
         return;
       }
-      // 2. 将缓存文件保存到其他位置（例如，应用的文档目录）
-      // 这里只是一个示例，实际情况中你可能需要将文件复制到相册或指定目录
       var save = false;
       if (save) {
         var uuid = Uuid();
@@ -35,12 +31,12 @@ class CacheHelper{
             '${(await getApplicationDocumentsDirectory()).path}/$id.jpg';
         await cachedFile.copy(newPath);
         if (context.mounted) {
-          showContentDialog(context, "提示", '图片已成功保存到: $newPath');
+          showContentDialog(context, "", '');
         }
       }
     } catch (e) {
       if (context.mounted) {
-        showContentDialog(context, "提示", "保存图片失败");
+        showContentDialog(context, "", "");
       }
     }
   }

@@ -1,4 +1,3 @@
-
 import 'BingWallpaperSource.dart';
 import 'WallpaperItem.dart';
 import 'WallpaperSourceData.dart';

@@ -6,7 +6,7 @@ import 'package:gsettings/gsettings.dart';
 import 'LogUtil.dart';
 
 class GSettingsHelper {
-  static const String _TAG = "GSettings";
+  static const String _TAG = "GSettingsHelper";
 
   static void changeWallpaper(uri) {
     Log.d(_TAG, "changeWallpaper, uri:$uri");

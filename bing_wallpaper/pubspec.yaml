@@ -40,8 +40,8 @@ dependencies:
   gsettings: ^0.2.8
   dbus: ^0.7.11
   http: ^1.5.0
-  cached_network_image: ^3.4.1 # 请使用最新版本
-  path_provider: ^2.1.5 # 用于获取本地文件路径
+  cached_network_image: ^3.4.1
+  path_provider: ^2.1.5
   uuid: ^4.4.2
   fluent_ui: ^4.10.0
   fluentui_system_icons: ^1.1.273
